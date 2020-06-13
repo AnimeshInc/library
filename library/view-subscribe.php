@@ -1,8 +1,8 @@
+<?php require_once 'template/header.php'; ?>
 <?php
-require_once 'template/header.php';
 if (isset($_GET['id'])) {
 $id = Helper::clearInt($_GET['id']);
-$izdanie = (new IzdanieMap())->findViewById($id);
+$subscribe = (new SubscribeMap())->findViewById($id);
 $header = 'Просмотр Издания';
 ?>
 <div class="row">
@@ -12,30 +12,34 @@ $header = 'Просмотр Издания';
 <h1><?=$header;?></h1>
 <ol class="breadcrumb">
 <li><a href="index.php"><i class="fa fa-dashboard"></i> Главная</a></li>
-<li><a href="list-izdanie.php">Издания</a></li>
+<li><a href="list-subscribe.php">Издания</a></li>
 <li class="active"><?=$header;?></li>
 </ol>
 </section>
 <div class="box-body">
-<a class="btn btn-success" href="add-izdanie.php?id=<?=$id;?>">Изменить</a>
+<a class="btn btn-success" href="add-subscribe.php?id=<?=$id;?>">Изменить</a>
 </div>
 <div class="box-body">
 <table class="table table-bordered table-hover">
 <tr>
-<th>Название</th>
-<td><?=$izdanie->name;?></td>
+<th>Тип Подписки</th>
+<td><?=$subscribe->subscribe_type;?></td>
 </tr>
 <tr>
-<th>Тип Издания</th>
-<td><?=$izdanie->izdanie_type;?></td>
+<th>Индекс</th>
+<td><?=$subscribe->indexd;?></td>
 </tr>
 <tr>
-<th>Дата Выпуска</th>
-<td><?=date("d.m.Y", strtotime($izdanie->data_issue));?></td>
+<th>Цена</th>
+<td><?=$subscribe->price;?></td>
 </tr>
 <tr>
-<th>Номер Издания</th>
-<td><?=$izdanie->izdanie_num;?></td>
+<th>Издание</th>
+<td><?=$subscribe->izdanie;?></td>
+</tr>
+<tr>
+<th>Доставка</th>
+<td><?=$subscribe->delivery;?></td>
 </tr>
 </table>
 </div>

@@ -1,73 +1,61 @@
 <?php
-class IzdaneMap extends BaseMap {
-    public function arrIzdanes(){
-        $res = $this->db->query("SELECT Izdane_id AS id, name AS
-        value FROM Izdane");
+class IzdanieTypeMap extends BaseMap {
+    public function arrIzdanieTypes(){
+        $res = $this->db->query("SELECT izdanie_type_id AS id, name AS
+        value FROM izdanie_type");
         return $res->fetchAll(PDO::FETCH_ASSOC);
     }
     public function findById($id = null){
         if ($id) {
-            $res = $this->db->query("SELECT Izdane_id, name,
-            special_id, date_begin, date_end "
-            . " FROM Izdane WHERE Izdane_id = $id");
-            return $res->fetchObject("Izdane");
+            $res = $this->db->query("SELECT izdanie_type_id, name "
+            . " FROM izdanie_type WHERE izdanie_type_id = $id");
+            return $res->fetchObject("izdanie_type");
             }
-        return new Izdane();
+        return new IzdanieType();
     }
-    public function save(Izdane $izdane){
-        if ($izdane->validate()) {
-            if ($izdane->Izdane_id == 0) {
-            return $this->insert($izdane);
+    public function save(izdanie_type $izdanie_type){
+        if ($izdanie_type->validate()) {
+            if ($izdanie_type->izdanie_type_id == 0) {
+            return $this->insert($izdanie_type);
             } else {
-            return $this->update($izdane);
+            return $this->update($izdanie_type);
             }
         }
         return false;
     }
-    private function insert(Izdane $izdane){
-        $name = $this->db->quote($izdane->name);
-        $date_begin = $this->db->quote($izdane->date_begin);
-        $date_end = $this->db->quote($izdane->date_end);
-        if ($this->db->exec("INSERT INTO Izdane(name, special_id,
-        date_begin, date_end)" . " VALUES($name, $izdane->special_id, $date_begin, $date_end)") == 1) {
-        $izdane->Izdane_id = $this->db->lastInsertId();
+    private function insert(izdanie_type $izdanie_type){
+        $name = $this->db->quote($izdanie_type->name);
+        if ($this->db->exec("INSERT INTO izdanie_type(name)" . " VALUES($name)") == 1) {
+        $izdanie_type->izdanie_type_id = $this->db->lastInsertId();
         return true;
         }
         return false;
     }
-    private function update(Izdane $izdane){
-        $name = $this->db->quote($izdane->name);
-        $date_begin = $this->db->quote($izdane->date_begin);
-        $date_end = $this->db->quote($izdane->date_end);
-        if ( $this->db->exec("UPDATE Izdane SET name = $name,
-        special_id = $izdane->special_id,"
-        . " date_begin = $date_begin, date_end =
-        $date_end WHERE Izdane_id = ".$izdane->Izdane_id) == 1) {
+    private function update(izdanie_type $izdanie_type){
+        $name = $this->db->quote($izdanie_type->name);
+        if ( $this->db->exec("UPDATE izdanie_type SET name = $name "
+        . " WHERE izdanie_type_id = ".$izdanie_type->izdanie_type_id) == 1) {
         return true;
         }
         return false;
     }
     public function findAll($ofset = 0, $limit = 30){
-        $res = $this->db->query("SELECT Izdane.Izdane_id,
-        Izdane.name, special.name AS special, Izdane.date_begin,
-        Izdane.date_end"
-        . " FROM Izdane INNER JOIN special ON
-        Izdane.special_id=special.special_id LIMIT $ofset,
+        $res = $this->db->query("SELECT izdanie_type.izdanie_type_id,
+        izdanie_type.name as name"
+        . " FROM izdanie_type LIMIT $ofset,
         $limit");
         return $res->fetchAll(PDO::FETCH_OBJ);
     }
     public function count(){
         $res = $this->db->query("SELECT COUNT(*) AS cnt FROM
-        Izdane");
+        izdanie_type");
         return $res->fetch(PDO::FETCH_OBJ)->cnt;
     }
     public function findViewById($id = null) {
         if ($id) {
-        $res = $this->db->query("SELECT Izdane.Izdane_id,
-        Izdane.name, special.name AS special, Izdane.date_begin,
-        Izdane.date_end"
-        . " FROM Izdane INNER JOIN special ON
-        Izdane.special_id=special.special_id WHERE Izdane_id =
+        $res = $this->db->query("SELECT izdanie_type.izdanie_type_id,
+        izdanie_type.name as name"
+        . " FROM izdanie_type WHERE izdanie_type_id =
         $id");
         return $res->fetch(PDO::FETCH_OBJ);
         }

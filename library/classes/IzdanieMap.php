@@ -12,7 +12,7 @@ class IzdanieMap extends BaseMap {
             . " FROM izdanie WHERE izdanie_id = $id");
             return $res->fetchObject("izdanie");
             }
-        return new izdanie();
+        return new Izdanie();
     }
     public function save(izdanie $izdanie){
         if ($izdanie->validate()) {
@@ -40,7 +40,7 @@ class IzdanieMap extends BaseMap {
         $data_issue = $this->db->quote($izdanie->data_issue);
         $izdanie_num = $this->db->quote($izdanie->izdanie_num);
         if ( $this->db->exec("UPDATE izdanie SET name = $name,
-        izdanie_type_id = $izdanie->izdanie_type_id,"
+        izdanie_type_id = $izdanie->izdanie_type_id, "
         . " data_issue = $data_issue, izdanie_num =
         $izdanie_num WHERE izdanie_id = ".$izdanie->izdanie_id) == 1) {
         return true;

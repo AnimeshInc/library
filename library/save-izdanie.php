@@ -1,26 +1,22 @@
 <?php
-require_once 'secure.php';
-if (isset($_POST['Izdanie_id'])) {
-$Izdanie = new Izdanie();
-$Izdanie->Izdanie_id =
-Helper::clearInt($_POST['Izdanie_id']);
-$Izdanie->name = Helper::clearString($_POST['name']);
-$Izdanie->izdanie_type_id =
-Helper::clearInt($_POST['izdanie_type_id']);
-$Izdanie->data_issue =
-Helper::clearString($_POST['data_issue']);
-$Izdanie->izdanie_num =
-Helper::clearInt($_POST['izdanie_num']);
-if ((new IzdanieMap())->save($Izdanie)) {
-header('Location: view-Izdanie.php?id='.$Izdanie->Izdanie_id);
-} 
-else {
-if ($Izdanie->Izdanie_id) {
-header('Location: add-Izdanie.php?id='.$Izdanie->Izdanie_id);
-} 
-else {
-header('Location: add-Izdanie.php');
-}
-}
+require_once 'autoload.php';
+if (isset($_POST['izdanie_id'])) {
+    $izdanie = new Izdanie();
+    $izdanie->izdanie_id = Helper::clearInt($_POST['izdanie_id']);
+    $izdanie->name = Helper::clearString($_POST['name']);    
+    $izdanie->izdanie_type_id = Helper::clearInt($_POST['izdanie_type_id']);
+    $izdanie->data_issue = Helper::clearString($_POST['data_issue']);
+    $izdanie->izdanie_num = Helper::clearString($_POST['izdanie_num']);
+    if ((new IzdanieMap())->save($izdanie)) {
+        header('Location: view-izdanie.php?id='.$izdanie->izdanie_id);
+    } 
+    else {
+        if ($izdanie->izdanie_id) {
+            header('Location: add-izdanie.php?id='.$izdanie->izdanie_id);
+        }
+        else {
+            header('Location: add-izdanie.php');
+        }
+    }
 }
 ?>

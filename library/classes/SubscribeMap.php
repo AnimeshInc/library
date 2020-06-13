@@ -1,68 +1,106 @@
 <?php
-class TeacherMap extends BaseMap {
+class SubscribeMap extends BaseMap {
+    public function arrSubscribes(){
+        $res = $this->db->query("SELECT subscribe_id AS id, indexd AS
+        value FROM subscribe");
+        return $res->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function findById($id = null){
         if ($id) {
-            $res = $this->db->query("SELECT user_id, otdel_id
-            FROM teacher WHERE user_id = $id");
-            $teacher = $res->fetchObject("Teacher");
-            if ($teacher) {
-                return $teacher;
+            $res = $this->db->query("SELECT subscribe_id, indexd, price, subscribe_type_id, 
+            izdanie_id, delivery_id "
+            . " FROM subscribe WHERE subscribe_id = $id");
+            return $res->fetchObject("subscribe");
+            }
+        return new Subscribe();
+    }
+    public function save(subscribe $subscribe){
+        if ($subscribe->validate()) {
+            if ($subscribe->subscribe_id == 0) {
+            return $this->insert($subscribe);
+            } else {
+            return $this->update($subscribe);
             }
         }
-        return new Teacher();
-    }
-    public function save(User $user, Teacher $teacher){
-        if ($user->validate() && $teacher->validate() && (new
-        UserMap())->save($user)) {
-            if ($teacher->user_id == 0) {
-            $teacher->user_id = $user->user_id;
-            return $this->insert($teacher);
-                } else {
-                    return $this->update($teacher);
-                }
-            }
         return false;
     }
-    private function insert(Teacher $teacher){
-        if ($this->db->exec("INSERT INTO teacher(user_id,
-        otdel_id) VALUES($teacher->user_id, $teacher->otdel_id)")
-        == 1) {
+    private function insert(subscribe $subscribe){
+        $indexd = $this->db->quote($subscribe->indexd);
+        $price = $this->db->quote($subscribe->price);
+        if ($this->db->exec("INSERT INTO 
+        subscribe(subscribe_type_id,
+        price, indexd, 
+        izdanie_id, delivery_id)" 
+        . " VALUES($subscribe->subscribe_type_id, 
+        $price, $indexd, 
+        $subscribe->izdanie_id, 
+        $subscribe->delivery_id)") == 1) {
+        $subscribe->subscribe_id = $this->db->lastInsertId();
         return true;
         }
         return false;
     }
-    private function update(Teacher $teacher){
-        if ($this->db->exec("UPDATE teacher SET otdel_id =
-        $teacher->otdel_id WHERE user_id=".$teacher->user_id) ==
-        1) {
+    public function qery1(){
+        $res = $this->db->query("SELECT izdanie.name AS izdanie, 
+        izdanie.data_issue AS datepub,
+        izdanie_type.name AS izdanie_type, 
+        subscribe.price AS price, 
+        subscribe_type.date_begin AS dateb,
+        subscribe_type.date_end AS datee
+        FROM subscribe 
+        INNER JOIN izdanie ON 
+        subscribe.izdanie_id = izdanie.izdanie_id
+        AND izdanie.data_issue > '2020-01-01'
+        AND izdanie.data_issue < '2021-01-01'
+        INNER JOIN izdanie_type ON
+        izdanie.izdanie_type_id = izdanie_type.izdanie_type_id 
+        INNER JOIN subscribe_type ON 
+        subscribe.subscribe_type_id = subscribe_type.subscribe_type_id 
+        ORDER BY subscribe_type.subscribe_type_id");
+        return $res->fetchAll(PDO::FETCH_OBJ);
+    }
+    private function update(subscribe $subscribe){
+        $indexd = $this->db->quote($subscribe->indexd);
+        $price = $this->db->quote($subscribe->price);
+        if ( $this->db->exec("UPDATE subscribe SET indexd = $indexd,
+        subscribe_type_id = $subscribe->subscribe_type_id, price = $price,"
+        . " izdanie_id = $subscribe->izdanie_id, delivery_id =
+        $subscribe->delivery_id WHERE subscribe_id = ".$subscribe->subscribe_id) == 1) {
         return true;
         }
         return false;
     }
     public function findAll($ofset = 0, $limit = 30){
-        $res = $this->db->query("SELECT user.user_id,
-        CONCAT(user.lastname,' ', user.firstname, ' ',
-        user.patronymic) AS fio, user.birthday, "
-        . " gender.name AS gender, otdel.name AS otdel,
-        role.name AS role FROM user INNER JOIN teacher ON
-        user.user_id=teacher.user_id "
-        . "INNER JOIN gender ON
-        user.gender_id=gender.gender_id INNER JOIN otdel ON
-        teacher.otdel_id=otdel.otdel_id"
-        . " INNER JOIN role ON user.role_id=role.role_id LIMIT
-        $ofset, $limit");
+        $res = $this->db->query("SELECT subscribe.subscribe_id, izdanie.name AS izdanie, 
+        subscribe.indexd, subscribe_type.name AS subscribe_type, subscribe.price,
+        subscribe.subscribe_type_id, delivery.type AS delivery"
+        . " FROM subscribe INNER JOIN subscribe_type ON
+        subscribe.subscribe_type_id=subscribe_type.subscribe_type_id "
+        . " INNER JOIN izdanie ON
+        subscribe.izdanie_id=izdanie.izdanie_id  "
+        . " INNER JOIN delivery ON
+        subscribe.delivery_id=delivery.delivery_id LIMIT $ofset,
+        $limit");
         return $res->fetchAll(PDO::FETCH_OBJ);
     }
     public function count(){
         $res = $this->db->query("SELECT COUNT(*) AS cnt FROM
-        teacher");
+        subscribe");
         return $res->fetch(PDO::FETCH_OBJ)->cnt;
     }
-    public function findProfileById($id = null) {
+    public function findViewById($id = null) {
         if ($id) {
-            $res = $this->db->query("SELECT teacher.user_id, otdel.name AS otdel FROM teacher "
-                . "INNER JOIN otdel ON teacher.otdel_id=otdel.otdel_id WHERE teacher.user_id = $id");
-            return $res->fetch(PDO::FETCH_OBJ);
+        $res = $this->db->query("SELECT subscribe.subscribe_id, izdanie.name AS izdanie, 
+        subscribe.indexd, subscribe_type.name AS subscribe_type, subscribe.price,
+        subscribe.subscribe_type_id, delivery.type AS delivery"
+        . " FROM subscribe INNER JOIN subscribe_type ON
+        subscribe.subscribe_type_id=subscribe_type.subscribe_type_id "
+        . " INNER JOIN izdanie ON
+        subscribe.izdanie_id=izdanie.izdanie_id  "
+        . " INNER JOIN delivery ON
+        subscribe.delivery_id=delivery.delivery_id WHERE subscribe_id =
+        $id");
+        return $res->fetch(PDO::FETCH_OBJ);
         }
         return false;
     }

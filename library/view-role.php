@@ -2,8 +2,8 @@
 require_once 'template/header.php';
 if (isset($_GET['id'])) {
 $id = Helper::clearInt($_GET['id']);
-$izdanie = (new IzdanieMap())->findViewById($id);
-$header = 'Просмотр Издания';
+$role = (new roleMap())->findViewById($id);
+$header = 'Просмотр Роли';
 ?>
 <div class="row">
 <div class="col-xs-12">
@@ -12,30 +12,22 @@ $header = 'Просмотр Издания';
 <h1><?=$header;?></h1>
 <ol class="breadcrumb">
 <li><a href="index.php"><i class="fa fa-dashboard"></i> Главная</a></li>
-<li><a href="list-izdanie.php">Издания</a></li>
+<li><a href="list-role.php">Роли</a></li>
 <li class="active"><?=$header;?></li>
 </ol>
 </section>
 <div class="box-body">
-<a class="btn btn-success" href="add-izdanie.php?id=<?=$id;?>">Изменить</a>
+<a class="btn btn-success" href="add-role.php?id=<?=$id;?>">Изменить</a>
 </div>
 <div class="box-body">
 <table class="table table-bordered table-hover">
 <tr>
-<th>Название</th>
-<td><?=$izdanie->name;?></td>
+<th>Системная роль</th>
+<td><?=$role->name;?></td>
 </tr>
 <tr>
-<th>Тип Издания</th>
-<td><?=$izdanie->izdanie_type;?></td>
-</tr>
-<tr>
-<th>Дата Выпуска</th>
-<td><?=date("d.m.Y", strtotime($izdanie->data_issue));?></td>
-</tr>
-<tr>
-<th>Номер Издания</th>
-<td><?=$izdanie->izdanie_num;?></td>
+<th>Роль</th>
+<td><?=$role->sys_name;?></td>
 </tr>
 </table>
 </div>

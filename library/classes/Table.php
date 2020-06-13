@@ -1,5 +1,5 @@
 <?php
-abstract class table{
+abstract class Table{
     abstract public function validate();
 }
 ?>

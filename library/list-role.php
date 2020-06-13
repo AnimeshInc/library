@@ -6,10 +6,10 @@ $page = Helper::clearInt($_GET['page']);
 } else {
 $page = 1;
 }
-$izdanieMap = new IzdanieMap();
-$count = $izdanieMap->count();
-$izdanies = $izdanieMap->findAll($page*$size-$size, $size);
-$header = 'Список Изданий';
+$roleMap = new roleMap();
+$count = $roleMap->count();
+$roles = $roleMap->findAll($page*$size-$size, $size);
+$header = 'Список Ролей';
 ?>
 <div class="row">
 <div class="col-xs-12">
@@ -22,38 +22,33 @@ $header = 'Список Изданий';
 </ol>
 </section>
 <div class="box-body">
-<a class="btn btn-success" href="add-izdanie.php">Добавить Издание</a>
+<a class="btn btn-success" href="add-role.php">Добавить Роль</a>
 </div>
 <div class="box-body">
 <?php
-if ($izdanies) {
+if ($roles) {
 ?>
 <table id="example2" class="table table-bordered table-hover">
 <thead>
 <tr>
-<th>Название</th>
-<th>Тип издания</th>
-<th>Дата выпуска</th>
-<th>Номер издания</th>
+<th>Системная роль</th>
+<th>Роль</th>
 </tr>
 </thead>
 <tbody>
 <?php
-foreach ($izdanies as $izdanie) {
+foreach ($roles as $role) {
 echo '<tr>';
-echo '<td><a href="view-izdanie.php?id='.$izdanie->izdanie_id.'">'.$izdanie->name.'</a> '
-. '<a href="add-izdanie.php?id='.$izdanie->izdanie_id.'"><i class="fa fa-pencil"></i></a></td>';
-echo '<td>'.$izdanie->izdanie_type.'</td>';
-echo '<td>'.date("d.m.Y",
-strtotime($izdanie->data_issue)).'</td>';
-echo '<td>'.$izdanie->izdanie_num.'</td>';
+echo '<td><a href="view-role.php?id='.$role->role_id.'">'.$role->sysname.'</a> '
+. '<a href="add-role.php?id='.$role->role_id.'"><i class="fa fa-pencil"></i></a></td>';
+echo '<td>'.$role->name.'</td>';
 echo '</tr>';
 }
 ?>
 </tbody>
 </table>
 <?php } else {
-echo 'Ни одного издания не найдено';
+echo 'Ошибка';
 } ?>
 </div>
 <div class="box-body">

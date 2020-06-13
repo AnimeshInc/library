@@ -1,9 +1,14 @@
+<?php
+    spl_autoload_register(function ($class_name) {
+      include_once 'classes/'. $class_name . '.php';
+    });
+?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title><?=($header)? $header : 'Расписание занятий колледжа';?></title>
+  <title><?=($header)? $header : 'Библиотека';?></title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="template/css/bootstrap.min.css">
@@ -28,7 +33,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Расписание</b></span>
+      <span class="logo-lg"><b>Библиотека</b></span>
     </a>
 
     <!-- Header Navbar -->
@@ -118,12 +123,7 @@
           </li>
           <!-- User Account Menu -->
           <li class="dropdown user user-menu">
-            <!-- Menu Toggle Button -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">Здравствуйте, <?=$_SESSION['fio'];?>
-                  </span>
-            </a>
+          
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">

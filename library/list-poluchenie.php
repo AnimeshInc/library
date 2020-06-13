@@ -6,10 +6,10 @@ $page = Helper::clearInt($_GET['page']);
 } else {
 $page = 1;
 }
-$izdanieMap = new IzdanieMap();
-$count = $izdanieMap->count();
-$izdanies = $izdanieMap->findAll($page*$size-$size, $size);
-$header = 'Список Изданий';
+$poluchenieMap = new poluchenieMap();
+$count = $poluchenieMap->count();
+$poluchenies = $poluchenieMap->findAll($page*$size-$size, $size);
+$header = 'Список получений';
 ?>
 <div class="row">
 <div class="col-xs-12">
@@ -22,38 +22,33 @@ $header = 'Список Изданий';
 </ol>
 </section>
 <div class="box-body">
-<a class="btn btn-success" href="add-izdanie.php">Добавить Издание</a>
-</div>
-<div class="box-body">
 <?php
-if ($izdanies) {
+if ($poluchenies) {
 ?>
 <table id="example2" class="table table-bordered table-hover">
 <thead>
 <tr>
 <th>Название</th>
-<th>Тип издания</th>
-<th>Дата выпуска</th>
-<th>Номер издания</th>
+<th>ФИО Сотрудника</th>
+<th>Дата Получения</th>
+<th>Тип подписки</th>
 </tr>
 </thead>
 <tbody>
 <?php
-foreach ($izdanies as $izdanie) {
+foreach ($poluchenies as $poluchenie) {
 echo '<tr>';
-echo '<td><a href="view-izdanie.php?id='.$izdanie->izdanie_id.'">'.$izdanie->name.'</a> '
-. '<a href="add-izdanie.php?id='.$izdanie->izdanie_id.'"><i class="fa fa-pencil"></i></a></td>';
-echo '<td>'.$izdanie->izdanie_type.'</td>';
-echo '<td>'.date("d.m.Y",
-strtotime($izdanie->data_issue)).'</td>';
-echo '<td>'.$izdanie->izdanie_num.'</td>';
+echo '<td><a href="view-poluchenie.php?id='.$poluchenie->poluchenie_id.'">'.$poluchenie->izdanie.'</a> ';
+echo '<td>'.$poluchenie->fio.'</td>';
+echo '<td>'.date("d.m.Y", strtotime($poluchenie->date)).'</td>';
+echo '<td>'.$poluchenie->subscribe_type.'</td>';
 echo '</tr>';
 }
 ?>
 </tbody>
 </table>
 <?php } else {
-echo 'Ни одного издания не найдено';
+echo 'Нет получений';
 } ?>
 </div>
 <div class="box-body">
